@@ -1,0 +1,22 @@
+{
+	"name": "AWS DLC TensorFlow",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.pythonPath": "/usr/local/bin/python",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": false,
+		"python.linting.flake8Enabled": true,
+		"python.linting.flake8Path": "/usr/local/bin/flake8",
+		"editor.formatOnSave": true,
+		"python.formatting.provider": "yapf",
+		"python.formatting.yapfPath": "/usr/local/bin/yapf",
+		"python.linting.mypyEnabled": true,
+		"python.linting.mypyPath": "/usr/local/bin/mypy",
+	},
+	"extensions": [
+		"ms-python.python"
+	]
+}
