@@ -12,4 +12,4 @@ if __name__ == '__main__':
     else:
         sess.client('s3').create_bucket(Bucket=bucket, CreateBucketConfiguration={'LocationConstraint': sess.region_name})
 
-    sagemaker.Session().upload_data(path='mnist', bucket=bucket, key_prefix=key_prefix)
+    sagemaker.Session().upload_data(path='dataset', bucket=bucket, key_prefix=key_prefix)

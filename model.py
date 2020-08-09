@@ -1,9 +1,9 @@
 import tensorflow as tf
-
+import logging
 
 class Model:
-    def __init__(self, dropout: float):
-        super(Model, self).__init__()
+    def __init__(self, logger: logging.Logger, dropout: float):
+        self.logger = logger
         self.model = tf.keras.Sequential([
             tf.keras.layers.DenseFeatures(self._feature_columns()),
             tf.keras.layers.Dense(128, activation=tf.nn.relu),
@@ -22,21 +22,24 @@ class Model:
 
     def _fill(self, feature: str, value):
         def __fill(x):
-            if x['features'][feature] == -1.0:
-                x['features'][feature] = value
+            if x[feature] == -1.0:
+                x[feature] = value
             return x
 
         return __fill
 
     def _preprocess(self, ds: tf.data.Dataset):
-        ds_size = len(list(ds.filter(lambda x: x['features']['age'] != -1.0)))
-        avg_age = ds.filter(lambda x: x['features']['age'] != -1.0).reduce(0.0, lambda x, y: x + y['features']['age']) / ds_size
+        ds_size = len(list(ds.filter(lambda x: x['age'] != -1.0)))
+        avg_age = ds.filter(lambda x: x['age'] != -1.0).reduce(0.0, lambda x, y: x + y['age']) / ds_size
         ds = ds.map(self._fill('age', avg_age))
         return ds.shuffle(1000).batch(100).prefetch(5)
 
-    def train(self, ds: tf.data.Dataset):
+    def train(self, data_path: str):
+        ds = tf.data.experimental.make_csv_dataset(data_path, num_epochs=1, batch_size=1).unbatch()
         for features in self._preprocess(ds):
-            self.model.fit(features['features'], tf.one_hot(features['survived'], 2))
+            self.model.fit(features, tf.one_hot(features['survived'], 2))
+            loss, accuracy = self.model.evaluate(features, tf.one_hot(features['survived'], 2), verbose=0)
+            self.logger.info(f'train accuracy: {accuracy}, train loss: {loss};')
 
     def save(self, path: str):
-        self.model.save(path)
+        self.model.save(path, save_format="tf")
