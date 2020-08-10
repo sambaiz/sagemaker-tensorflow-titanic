@@ -5,11 +5,13 @@ import json
 import logging
 import sys
 
+
 def _make_logger():
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler(sys.stdout))
     return logger
+
 
 def _parse_args():
     parser = argparse.ArgumentParser()
@@ -18,7 +20,7 @@ def _parse_args():
     parser.add_argument('--dropout', type=float, default=0.2, metavar='DROP', help='dropout rate (default: 0.2)')
 
     # Container environment
-    parser.add_argument('--model_dir', type=str, default=os.environ.get('SM_MODEL_DIR', '.'))
+    parser.add_argument('--model_dir', type=str, default=os.environ.get('SM_MODEL_DIR', 'model'))
     parser.add_argument('--hosts', type=str, default=os.environ.get('SM_HOSTS', '[]'))
     parser.add_argument('--current-host', type=str, default=os.environ.get('SM_CURRENT_HOST'))
 

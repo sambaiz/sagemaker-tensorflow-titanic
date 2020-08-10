@@ -1,4 +1,4 @@
 dataset
 .mypy_cache
-model.h5
+model
 .vscode
